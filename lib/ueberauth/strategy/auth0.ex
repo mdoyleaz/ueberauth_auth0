@@ -1,16 +1,13 @@
 defmodule Ueberauth.Strategy.Auth0 do
   @moduledoc """
   Provides an Ueberauth strategy for authenticating with Auth0.
-
   You can edit the behaviour of the Strategy by including some options when you register your provider.
-
   To set the `uid_field`
       config :ueberauth, Ueberauth,
         providers: [
           auth0: { Ueberauth.Strategy.Auth0, [uid_field: :email] }
         ]
   Default is `:sub`
-
   To set the default ['scopes'](https://auth0.com/docs/scopes) (permissions):
       config :ueberauth, Ueberauth,
         providers: [
@@ -149,7 +146,15 @@ defmodule Ueberauth.Strategy.Auth0 do
       first_name: user["given_name"],
       last_name: user["family_name"],
       image: user["picture"],
-      urls: %{roles: user["https://oforce:auth0:com/v2/roles"]}
+      urls: %{
+        roles: user["https://oforce:auth0:com/v2/roles"],
+        insurance: %{
+          company: %{
+            id: user["http://oforce.com/insurance/company/id"],
+            role: user["http://oforce.com/insurance/company/role"]
+          }
+        }
+      }
     }
   end
 
